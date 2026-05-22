@@ -1,0 +1,100 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String         @id @default(uuid())
+  email         String         @unique
+  password      String
+  name          String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  savedColleges SavedCollege[]
+  reviews       Review[]
+  questions     Question[]
+  answers       Answer[]
+}
+
+model College {
+  id            String         @id @default(uuid())
+  name          String
+  description   String         @db.Text
+  location      String
+  fees          Int            // Annual average tuition fees in INR
+  rating        Float          @default(0.0)
+  placementRate Float          // Placement percentage (e.g. 92.5)
+  imageUrl      String         // Main banner image
+  logoUrl       String         // College logo
+  website       String
+  email         String
+  phone         String
+  established   Int            // Year established
+  facilities    String[]       // Array of facilities: WiFi, Hostel, Gym, etc.
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  courses       Course[]
+  reviews       Review[]
+  savedBy       SavedCollege[]
+  questions     Question[]
+}
+
+model Course {
+  id          String   @id @default(uuid())
+  name        String   // Course name e.g. B.Tech Computer Science
+  duration    Int      // Duration in years
+  fees        Int      // Annual course fees in INR
+  collegeId   String
+  college     College  @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  rating    Int      // 1 to 5 stars
+  comment   String   @db.Text
+  userName  String   // Name of reviewer
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  collegeId String
+  college   College  @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model SavedCollege {
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  collegeId String
+  college   College  @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@id([userId, collegeId])
+}
+
+model Question {
+  id        String   @id @default(uuid())
+  content   String   @db.Text
+  userName  String   // Name of questioner
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  collegeId String
+  college   College  @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  answers   Answer[]
+  createdAt DateTime @default(now())
+}
+
+model Answer {
+  id         String   @id @default(uuid())
+  content    String   @db.Text
+  userName   String   // Name of answerer
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+}
