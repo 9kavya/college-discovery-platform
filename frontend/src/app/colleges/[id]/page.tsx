@@ -33,7 +33,9 @@ import {
 } from 'lucide-react';
 
 export default function CollegeDetailPage() {
-  const { id } = useParams() as { id: string };
+  const params = useParams();
+  const rawId = params?.id;
+  const id = Array.isArray(rawId) ? rawId[0] : rawId;
   const { user, savedCollegeIds, toggleSaveCollege } = useAuth();
   const { comparedColleges, addCollegeToCompare, removeCollegeFromCompare } = useCompare();
 
@@ -62,6 +64,12 @@ export default function CollegeDetailPage() {
   const [visibleAnswerForms, setVisibleAnswerForms] = useState<Record<string, boolean>>({});
 
   const fetchCollegeDetails = useCallback(async () => {
+    if (!id) {
+      setLoading(false);
+      setError('Missing college id in the route.');
+      return;
+    }
+
     setError(null);
     setLoading(true);
     try {
@@ -83,6 +91,11 @@ export default function CollegeDetailPage() {
   }, [id]);
 
   const fetchQuestions = useCallback(async () => {
+    if (!id) {
+      setLoadingQuestions(false);
+      return;
+    }
+
     setLoadingQuestions(true);
     try {
       const res = await api.getQuestions(id);
