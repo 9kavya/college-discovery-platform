@@ -23,6 +23,7 @@ export default function CollegeListingClient() {
   const [maxFees, setMaxFees] = useState(600000);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [error, setError] = useState<string | null>(null);
   const limit = 6;
 
   useEffect(() => {
@@ -32,6 +33,7 @@ export default function CollegeListingClient() {
 
   const fetchColleges = useCallback(async () => {
     setLoading(true);
+    setError(null);
     try {
       const res = await api.getColleges({
         search: search || undefined,
@@ -45,9 +47,16 @@ export default function CollegeListingClient() {
         setColleges(res.data.colleges);
         setTotal(res.data.pagination.total);
         setTotalPages(res.data.pagination.totalPages);
+        return;
       }
+
+      throw new Error('Unexpected colleges API response');
     } catch (err: any) {
       console.error(err);
+      setColleges([]);
+      setTotal(0);
+      setTotalPages(1);
+      setError(err.message || 'Failed to load colleges');
       toast.error(err.message || 'Failed to load colleges');
     } finally {
       setLoading(false);
@@ -223,6 +232,23 @@ export default function CollegeListingClient() {
                 </div>
               )}
             </>
+          ) : error ? (
+            <div className="bg-white rounded-2xl border border-red-100 p-12 text-center shadow-premium">
+              <RefreshCw className="h-12 w-12 text-red-300 mx-auto mb-4" />
+              <h3 className="text-lg font-bold text-gray-950">Could not load colleges</h3>
+              <p className="text-xs sm:text-sm text-gray-500 mt-2 max-w-lg mx-auto">
+                {error}
+              </p>
+              <p className="text-xs text-gray-400 mt-3 max-w-lg mx-auto">
+                If this only happens in production, verify that Vercel has <code>NEXT_PUBLIC_API_URL</code> set to the deployed backend API and that Render has the correct <code>FRONTEND_URL</code> for CORS.
+              </p>
+              <button
+                onClick={fetchColleges}
+                className="mt-6 bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-premium"
+              >
+                Retry
+              </button>
+            </div>
           ) : (
             <div className="bg-white rounded-2xl border border-gray-150 p-12 text-center shadow-premium">
               <IndianRupee className="h-12 w-12 text-gray-300 mx-auto mb-4" />

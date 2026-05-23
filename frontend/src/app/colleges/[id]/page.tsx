@@ -39,6 +39,7 @@ export default function CollegeDetailPage() {
 
   const [college, setCollege] = useState<College | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'overview' | 'courses' | 'placements' | 'reviews' | 'qa'>('overview');
   const [logoError, setLogoError] = useState(false);
 
@@ -61,13 +62,20 @@ export default function CollegeDetailPage() {
   const [visibleAnswerForms, setVisibleAnswerForms] = useState<Record<string, boolean>>({});
 
   const fetchCollegeDetails = useCallback(async () => {
+    setError(null);
+    setLoading(true);
     try {
       const res = await api.getCollegeById(id);
       if (res.status === 'success' && res.data?.college) {
         setCollege(res.data.college);
+        return;
       }
+
+      throw new Error('College not found');
     } catch (err: any) {
       console.error(err);
+      setCollege(null);
+      setError(err.message || 'Failed to load college details');
       toast.error(err.message || 'Failed to load college details');
     } finally {
       setLoading(false);
@@ -120,6 +128,27 @@ export default function CollegeDetailPage() {
           <div className="space-y-6">
             <Skeleton variant="rect" className="h-48 rounded-2xl" />
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+        <div className="bg-white rounded-3xl border border-red-100 p-10 shadow-premium">
+          <HelpCircle className="h-14 w-14 text-red-300 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-gray-900">Could not load college details</h2>
+          <p className="text-gray-500 mt-3">{error}</p>
+          <p className="text-xs text-gray-400 mt-3">
+            Check that the deployed backend API is reachable and that the college exists in production.
+          </p>
+          <button
+            onClick={fetchCollegeDetails}
+            className="mt-6 bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-premium"
+          >
+            Retry
+          </button>
         </div>
       </div>
     );
