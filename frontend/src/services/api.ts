@@ -1,15 +1,24 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '');
 
-const getHeaders = () => {
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  };
+const getApiUrl = (path: string) => {
+  if (!API_URL) {
+    throw new Error('NEXT_PUBLIC_API_URL is not configured.');
+  }
+
+  return `${API_URL}${path}`;
+};
+
+const getHeaders = (extraHeaders?: HeadersInit) => {
+  const headers = new Headers(extraHeaders);
+  headers.set('Content-Type', 'application/json');
+
   if (typeof window !== 'undefined') {
     const token = localStorage.getItem('token');
     if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
+      headers.set('Authorization', `Bearer ${token}`);
     }
   }
+
   return headers;
 };
 
@@ -34,36 +43,41 @@ async function handleResponse(response: Response) {
   return data;
 }
 
+async function apiRequest(path: string, init: RequestInit = {}) {
+  try {
+    const response = await fetch(getApiUrl(path), {
+      ...init,
+      headers: getHeaders(init.headers),
+    });
+
+    return handleResponse(response);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Network request failed';
+    throw new Error(message);
+  }
+}
+
 export const api = {
   // Auth
   register: async (payload: any) => {
-    const res = await fetch(`${API_URL}/auth/register`, {
+    return apiRequest('/auth/register', {
       method: 'POST',
-      headers: getHeaders(),
       body: JSON.stringify(payload),
     });
-    return handleResponse(res);
   },
 
   login: async (payload: any) => {
-    const res = await fetch(`${API_URL}/auth/login`, {
+    return apiRequest('/auth/login', {
       method: 'POST',
-      headers: getHeaders(),
       body: JSON.stringify(payload),
     });
-    return handleResponse(res);
   },
 
   getMe: async () => {
     try {
-      const res = await fetch(`${API_URL}/auth/me`, {
+      return await apiRequest('/auth/me', {
         method: 'GET',
-        headers: getHeaders(),
       });
-      if (!res.ok) {
-        return null;
-      }
-      return await res.json();
     } catch (e) {
       return null;
     }
@@ -86,84 +100,61 @@ export const api = {
     if (filters.page) params.append('page', String(filters.page));
     if (filters.limit) params.append('limit', String(filters.limit));
 
-    const res = await fetch(`${API_URL}/colleges?${params.toString()}`, {
+    return apiRequest(`/colleges?${params.toString()}`, {
       method: 'GET',
-      headers: getHeaders(),
-      next: { revalidate: 0 } // Disable fetch caching for dynamic values
     });
-    return handleResponse(res);
   },
 
   getCollegeById: async (id: string) => {
-    const res = await fetch(`${API_URL}/colleges/${id}`, {
+    return apiRequest(`/colleges/${id}`, {
       method: 'GET',
-      headers: getHeaders(),
-      next: { revalidate: 0 }
     });
-    return handleResponse(res);
   },
 
   submitReview: async (id: string, payload: { rating: number; comment: string; userName: string }) => {
-    const res = await fetch(`${API_URL}/colleges/${id}/reviews`, {
+    return apiRequest(`/colleges/${id}/reviews`, {
       method: 'POST',
-      headers: getHeaders(),
       body: JSON.stringify(payload),
     });
-    return handleResponse(res);
   },
 
   // Saved Colleges
   getSavedColleges: async () => {
-    const res = await fetch(`${API_URL}/saved`, {
+    return apiRequest('/saved', {
       method: 'GET',
-      headers: getHeaders(),
-      next: { revalidate: 0 }
     });
-    return handleResponse(res);
   },
 
   saveCollege: async (id: string) => {
-    const res = await fetch(`${API_URL}/saved/${id}`, {
+    return apiRequest(`/saved/${id}`, {
       method: 'POST',
-      headers: getHeaders(),
     });
-    return handleResponse(res);
   },
 
   unsaveCollege: async (id: string) => {
-    const res = await fetch(`${API_URL}/saved/${id}`, {
+    return apiRequest(`/saved/${id}`, {
       method: 'DELETE',
-      headers: getHeaders(),
     });
-    return handleResponse(res);
   },
 
   // Q&A Discussion
   getQuestions: async (collegeId: string) => {
-    const res = await fetch(`${API_URL}/qa/${collegeId}/questions`, {
+    return apiRequest(`/qa/${collegeId}/questions`, {
       method: 'GET',
-      headers: getHeaders(),
-      next: { revalidate: 0 },
     });
-    return handleResponse(res);
   },
 
   askQuestion: async (collegeId: string, payload: { content: string; userName?: string }) => {
-    const res = await fetch(`${API_URL}/qa/${collegeId}/questions`, {
+    return apiRequest(`/qa/${collegeId}/questions`, {
       method: 'POST',
-      headers: getHeaders(),
       body: JSON.stringify(payload),
     });
-    return handleResponse(res);
   },
 
   answerQuestion: async (questionId: string, payload: { content: string; userName?: string }) => {
-    const res = await fetch(`${API_URL}/qa/questions/${questionId}/answers`, {
+    return apiRequest(`/qa/questions/${questionId}/answers`, {
       method: 'POST',
-      headers: getHeaders(),
       body: JSON.stringify(payload),
     });
-    return handleResponse(res);
   },
 };
-

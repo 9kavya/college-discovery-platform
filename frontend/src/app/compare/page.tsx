@@ -22,15 +22,30 @@ export default function CompareCollegesPage() {
       }
       setLoading(true);
       try {
-        const details = await Promise.all(
+        const results = await Promise.allSettled(
           comparedColleges.map((c) =>
-            api.getCollegeById(c.id).then((res) => res.data.college)
+            api.getCollegeById(c.id)
           )
         );
+
+        const details = results
+          .filter((result): result is PromiseFulfilledResult<any> => result.status === 'fulfilled')
+          .map((result) => result.value?.data?.college)
+          .filter(Boolean);
+
+        if (details.length === 0) {
+          throw new Error('Unable to load comparison data');
+        }
+
         setDetailedColleges(details);
+
+        if (details.length < comparedColleges.length) {
+          toast.error('Some colleges could not be loaded for comparison');
+        }
       } catch (err: any) {
         console.error(err);
         toast.error('Failed to load detailed college comparisons');
+        setDetailedColleges([]);
       } finally {
         setLoading(false);
       }
