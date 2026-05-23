@@ -6,4 +6,4 @@ services:
     plan: free
     nodeVersion: 20
     buildCommand: npm install && npm run build
-    startCommand: npm run prisma:migrate:deploy && npm start
+    startCommand: npm run prisma:migrate:deploy && npm run prisma:seed && npm start

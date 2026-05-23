@@ -4,17 +4,23 @@ import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('Clearing database...');
-  await prisma.savedCollege.deleteMany({});
-  await prisma.review.deleteMany({});
-  await prisma.course.deleteMany({});
-  await prisma.college.deleteMany({});
-  await prisma.user.deleteMany({});
+  const collegeCount = await prisma.college.count();
+  if (collegeCount > 0) {
+    console.log(`Database already has ${collegeCount} colleges. Skipping seed.`);
+    return;
+  }
 
   console.log('Seeding default user...');
   const hashedPassword = await bcrypt.hash('change_this_immediately', 10);
-  const defaultUser = await prisma.user.create({
-    data: {
+  const defaultUser = await prisma.user.upsert({
+    where: {
+      email: 'trisha@gmail.com',
+    },
+    update: {
+      name: 'Trisha',
+      password: hashedPassword,
+    },
+    create: {
       name: 'Trisha',
       email: 'trisha@gmail.com',
       password: hashedPassword,
