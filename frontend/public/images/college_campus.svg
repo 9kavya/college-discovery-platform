@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <!-- Sky Gradient -->
+    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a8a" />
+      <stop offset="50%" stop-color="#3b82f6" />
+      <stop offset="100%" stop-color="#ea580c" />
+    </linearGradient>
+    
+    <!-- Building Gradient -->
+    <linearGradient id="buildingGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.05" />
+    </linearGradient>
+
+    <!-- Glass/Window Gradient -->
+    <linearGradient id="glassGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#0369a1" stop-opacity="0.2" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background Sky -->
+  <rect width="800" height="450" fill="url(#skyGrad)" />
+
+  <!-- Sun / Light Source -->
+  <circle cx="700" cy="120" r="80" fill="#fef08a" opacity="0.15" />
+  <circle cx="700" cy="120" r="40" fill="#ffffff" opacity="0.3" />
+
+  <!-- Stylized hills in background -->
+  <path d="M 0 450 L 0 350 Q 150 280 300 350 T 600 320 Q 700 340 800 300 L 800 450 Z" fill="#1e293b" opacity="0.5" />
+  <path d="M 0 450 L 0 380 Q 250 330 500 380 T 800 360 L 800 450 Z" fill="#0f172a" opacity="0.8" />
+
+  <!-- College Campus Buildings -->
+  <!-- Left Wing -->
+  <rect x="150" y="180" width="100" height="220" rx="8" fill="url(#buildingGrad)" stroke="#ffffff" stroke-opacity="0.2" stroke-width="1.5" />
+  <rect x="170" y="200" width="20" height="180" rx="4" fill="url(#glassGrad)" />
+  <rect x="210" y="200" width="20" height="180" rx="4" fill="url(#glassGrad)" />
+
+  <!-- Right Wing -->
+  <rect x="550" y="180" width="100" height="220" rx="8" fill="url(#buildingGrad)" stroke="#ffffff" stroke-opacity="0.2" stroke-width="1.5" />
+  <rect x="570" y="200" width="20" height="180" rx="4" fill="url(#glassGrad)" />
+  <rect x="610" y="200" width="20" height="180" rx="4" fill="url(#glassGrad)" />
+
+  <!-- Central Grand Hall -->
+  <rect x="230" y="120" width="340" height="280" rx="12" fill="url(#buildingGrad)" stroke="#ffffff" stroke-opacity="0.3" stroke-width="2" />
+  
+  <!-- Pillars -->
+  <g fill="#ffffff" opacity="0.2">
+    <rect x="260" y="200" width="15" height="200" rx="2" />
+    <rect x="300" y="200" width="15" height="200" rx="2" />
+    <rect x="340" y="200" width="15" height="200" rx="2" />
+    <rect x="445" y="200" width="15" height="200" rx="2" />
+    <rect x="485" y="200" width="15" height="200" rx="2" />
+    <rect x="525" y="200" width="15" height="200" rx="2" />
+  </g>
+
+  <!-- Glass Dome / Arch Entry -->
+  <path d="M 370 200 A 30 30 0 0 1 430 200 Z" fill="url(#glassGrad)" stroke="#ffffff" stroke-opacity="0.4" />
+  <rect x="370" y="200" width="60" height="200" fill="url(#glassGrad)" rx="2" />
+
+  <!-- Triangular Roof Pediment -->
+  <polygon points="210,120 590,120 400,60" fill="url(#buildingGrad)" stroke="#ffffff" stroke-opacity="0.3" stroke-width="2" />
+  <polygon points="220,115 580,115 400,65" fill="#ffffff" opacity="0.1" />
+
+  <!-- Ground -->
+  <rect x="0" y="400" width="800" height="50" fill="#0f172a" />
+</svg>

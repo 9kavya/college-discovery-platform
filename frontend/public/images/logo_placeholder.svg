@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <defs>
+    <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="100" height="100" rx="20" fill="url(#logoGrad)" />
+  <!-- Academic Building Icon inside logo -->
+  <g transform="translate(50, 50) scale(1.2)" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Columns and pediment -->
+    <polygon points="0,-18 18,-8 -18,-8" fill="#ffffff" fill-opacity="0.2" />
+    <line x1="-14" y1="-8" x2="-14" y2="10" />
+    <line x1="-6" y1="-8" x2="-6" y2="10" />
+    <line x1="6" y1="-8" x2="6" y2="10" />
+    <line x1="14" y1="-8" x2="14" y2="10" />
+    <line x1="-18" y1="10" x2="18" y2="10" />
+    <line x1="-20" y1="14" x2="20" y2="14" />
+  </g>
+</svg>

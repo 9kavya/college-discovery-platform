@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient matching the user's requested style -->
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a8a" />
+      <stop offset="50%" stop-color="#3b82f6" />
+      <stop offset="100%" stop-color="#ea580c" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="450" fill="url(#grad)" />
+  
+  <!-- Graduation Cap Icon in center/top as watermark -->
+  <g transform="translate(400, 210) scale(3.5)" stroke="#ffffff" stroke-width="2.2" stroke-opacity="0.18" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Diamond cap top -->
+    <polygon points="0,-25 35,-10 0,5 -35,-10" fill="#ffffff" fill-opacity="0.05" />
+    <!-- Tassel -->
+    <path d="M-20,-4 L-20,15 Q-20,20 -15,20" />
+    <!-- Cap bottom cap -->
+    <path d="M-18,-2 C-18,12 18,12 18,-2" fill="#ffffff" fill-opacity="0.08" />
+  </g>
+</svg>
