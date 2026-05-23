@@ -1,11 +1,11 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '');
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const getApiUrl = (path: string) => {
   if (!API_URL) {
     throw new Error('NEXT_PUBLIC_API_URL is not configured.');
   }
 
-  return `${API_URL}${path}`;
+  return `${API_URL.replace(/\/$/, '')}${path}`;
 };
 
 const getHeaders = (extraHeaders?: HeadersInit) => {
