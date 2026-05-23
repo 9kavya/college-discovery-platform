@@ -16,6 +16,9 @@
     "prisma:migrate:deploy": "node ./node_modules/prisma/build/index.js migrate deploy",
     "prisma:seed": "ts-node prisma/seed.ts"
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "dependencies": {
     "@prisma/client": "^5.14.0",
     "@types/bcryptjs": "^2.4.6",
